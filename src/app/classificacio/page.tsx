@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { CHAMPIONS_TEAMS } from "@/lib/teams-data";
 
 type TeamStats = {
   id: string;
@@ -25,6 +26,7 @@ type MatchRow = {
 };
 
 async function getStandings(): Promise<TeamStats[]> {
+  const localLogoMap = new Map(CHAMPIONS_TEAMS.map((team) => [team.name, team.logo]));
   let teams: { id: string; name: string; shortName: string; logo: string | null; country: string; group: string | null }[] = [];
   let matches: MatchRow[] = [];
 
@@ -42,6 +44,11 @@ async function getStandings(): Promise<TeamStats[]> {
   } catch {
     return [];
   }
+
+  teams = teams.map((team) => ({
+    ...team,
+    logo: localLogoMap.get(team.name) ?? team.logo,
+  }));
 
   const stats = new Map<string, TeamStats>();
   for (const team of teams) {
