@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect, useRef } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams, redirect } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const inputStyle = {
@@ -23,28 +23,28 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
   const registered = searchParams.get("registered");
+  const redirected = useRef(false);
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Si ja té sessió activa, redirigeix sense mostrar el formulari
-  if (status === "authenticated") {
-    const dest = session?.user?.role === "ADMIN" ? "/admin" : (callbackUrl === "/auth/login" ? "/" : callbackUrl);
-    router.replace(dest);
-    return (
-      <div style={{
-        width: "100%", maxWidth: "420px",
-        background: "linear-gradient(160deg, #001a4acc, #000f2acc)",
-        border: "1px solid #1a3a7a55", borderRadius: "20px", padding: "2.5rem 2rem",
-        backdropFilter: "blur(12px)", textAlign: "center",
-      }}>
-        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Redirigint...</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (status !== "authenticated" || redirected.current) return;
+    redirected.current = true;
 
-  if (status === "loading") {
+    const dest =
+      session?.user?.role === "ADMIN"
+        ? "/admin"
+        : callbackUrl && callbackUrl !== "/auth/login"
+        ? callbackUrl
+        : "/";
+
+    // Usar window.location para evitar loops con router
+    window.location.href = dest;
+  }, [status, session, callbackUrl]);
+
+  if (status === "loading" || status === "authenticated") {
     return (
       <div style={{
         width: "100%", maxWidth: "420px",
@@ -52,7 +52,10 @@ function LoginForm() {
         border: "1px solid #1a3a7a55", borderRadius: "20px", padding: "2.5rem 2rem",
         backdropFilter: "blur(12px)", textAlign: "center",
       }}>
-        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Carregant...</p>
+        <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⭐</div>
+        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>
+          {status === "authenticated" ? "Redirigint..." : "Carregant..."}
+        </p>
       </div>
     );
   }
@@ -66,7 +69,7 @@ function LoginForm() {
     if (result?.error) {
       setError("Email o contrasenya incorrectes.");
     } else {
-      router.push(callbackUrl === "/auth/login" ? "/" : callbackUrl);
+      // Login exitoso — dejar que el useEffect gestione la redirección
       router.refresh();
     }
   }
@@ -102,13 +105,17 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <div>
-          <label style={{ display: "block", fontSize: "0.72rem", color: "#7aadff", fontWeight: "700", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Email</label>
+          <label style={{ display: "block", fontSize: "0.72rem", color: "#7aadff", fontWeight: "700", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            Email
+          </label>
           <input type="email" required style={inputStyle} value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             placeholder="tu@email.com" />
         </div>
         <div>
-          <label style={{ display: "block", fontSize: "0.72rem", color: "#7aadff", fontWeight: "700", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Contrasenya</label>
+          <label style={{ display: "block", fontSize: "0.72rem", color: "#7aadff", fontWeight: "700", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            Contrasenya
+          </label>
           <input type="password" required style={inputStyle} value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             placeholder="••••••••" />
