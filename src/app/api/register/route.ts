@@ -9,7 +9,7 @@ const registerSchema = z.object({
   password: z.string().min(6, "La contrasenya ha de tenir mínim 6 caràcters"),
 });
 
-// POST /api/register — Registre d'un nou usuari (rol USER per defecte)
+// POST /api/register — Registre d'un nou usuari (sempre rol USER)
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -24,7 +24,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Hash de la contrasenya
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
@@ -32,8 +31,7 @@ export async function POST(request: Request) {
         name,
         email,
         password: hashedPassword,
-        // El primer usuari es fa ADMIN automàticament
-        role: (await prisma.user.count()) === 0 ? "ADMIN" : "USER",
+        role: "USER", // sempre USER, mai ADMIN per registre públic
       },
       select: { id: true, name: true, email: true, role: true },
     });

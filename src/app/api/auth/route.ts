@@ -1,3 +1,2 @@
-import { handlers } from "@/lib/auth";
-
-export const { GET, POST } = handlers;
+# Aquest fitxer no fa res.
+# El handler real és a: src/app/api/auth/[...nextauth]/route.ts
