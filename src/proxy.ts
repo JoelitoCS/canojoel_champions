@@ -5,7 +5,7 @@ import { getToken } from "next-auth/jwt";
 const protectedRoutes = ["/admin", "/dashboard", "/perfil"];
 const adminRoutes = ["/admin"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
