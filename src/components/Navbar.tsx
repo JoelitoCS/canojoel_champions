@@ -18,6 +18,9 @@ export function Navbar() {
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
   ];
 
+  const userImage = session?.user?.image ?? null;
+  const initials = (session?.user?.name ?? session?.user?.email ?? "U")[0].toUpperCase();
+
   return (
     <header style={{
       background: "linear-gradient(180deg, #04061acc 0%, #0a0e2ecc 100%)",
@@ -73,18 +76,39 @@ export function Navbar() {
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             {session ? (
               <>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }} className="hidden md:flex">
+                {/* Avatar + nom clicable → /perfil */}
+                <Link
+                  href="/perfil"
+                  style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+                  className="hidden md:flex"
+                >
+                  {/* Avatar */}
                   <div style={{
                     width: "32px", height: "32px", borderRadius: "50%",
-                    background: "linear-gradient(135deg, #1565c0, #00b4d8)",
+                    background: userImage ? "transparent" : "linear-gradient(135deg, #1565c0, #00b4d8)",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "0.75rem", fontWeight: "800", color: "#fff", flexShrink: 0,
+                    fontSize: "0.75rem", fontWeight: "800", color: "#fff",
+                    flexShrink: 0, overflow: "hidden", position: "relative",
+                    border: "2px solid #1a4a8855",
+                    transition: "border-color 0.2s",
                   }}>
-                    {(session.user?.name ?? session.user?.email ?? "U")[0].toUpperCase()}
+                    {userImage ? (
+                      <Image
+                        src={userImage}
+                        alt="Avatar"
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="32px"
+                      />
+                    ) : (
+                      initials
+                    )}
                   </div>
+
                   <span style={{ fontSize: "0.8rem", color: "#6a9acc", maxWidth: "130px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {session.user?.name ?? session.user?.email}
                   </span>
+
                   {isAdmin && (
                     <span style={{
                       fontSize: "0.58rem",
@@ -93,7 +117,8 @@ export function Navbar() {
                       fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0,
                     }}>ADMIN</span>
                   )}
-                </div>
+                </Link>
+
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
                   style={{

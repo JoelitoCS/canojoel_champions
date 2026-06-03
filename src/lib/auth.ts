@@ -29,7 +29,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || !user.password) return null;
 
-        // Import dinàmic per evitar problemes de bundling
         const { compare } = await import("bcryptjs");
         const isValid = await compare(password, user.password);
         if (!isValid) return null;
@@ -39,16 +38,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: user.name,
           email: user.email,
           role: user.role,
+          image: user.image,
         };
       },
     }),
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.role = (user as { role?: string }).role ?? "USER";
         token.id = user.id;
+        token.image = user.image ?? null;
+      }
+      // Permet actualitzar el token quan es crida update() des del client
+      if (trigger === "update" && session) {
+        if (session.name) token.name = session.name;
+        if (session.email) token.email = session.email;
+        if (session.image) token.image = session.image;
       }
       return token;
     },
@@ -56,6 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.role = token.role as string;
         session.user.id = token.id as string;
+        session.user.image = (token.image as string | null) ?? session.user.image;
       }
       return session;
     },

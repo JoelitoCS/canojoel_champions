@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { signIn } from "next-auth/react";
+import { useState, Suspense, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -19,6 +19,7 @@ const inputStyle = {
 
 function LoginForm() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
   const registered = searchParams.get("registered");
@@ -27,13 +28,42 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ── Si ja tens sessió activa, redirigeix ──
+  useEffect(() => {
+    if (status === "authenticated") {
+      // Si l'usuari és admin i ve de /admin, envia'l allà directament
+      if (session?.user?.role === "ADMIN" && callbackUrl.startsWith("/admin")) {
+        router.replace(callbackUrl);
+      } else if (session?.user?.role === "ADMIN") {
+        router.replace("/admin");
+      } else {
+        router.replace(callbackUrl === "/auth/login" ? "/" : callbackUrl);
+      }
+    }
+  }, [status, session, router, callbackUrl]);
+
+  // Mostrar loading mentre comprovem la sessió
+  if (status === "loading" || status === "authenticated") {
+    return (
+      <div style={{
+        width: "100%", maxWidth: "420px",
+        background: "linear-gradient(160deg, #001a4acc, #000f2acc)",
+        border: "1px solid #1a3a7a55", borderRadius: "20px", padding: "2.5rem 2rem",
+        backdropFilter: "blur(12px)", textAlign: "center",
+      }}>
+        <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⭐</div>
+        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Redirigint...</p>
+      </div>
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
     const result = await signIn("credentials", { ...form, redirect: false });
     setLoading(false);
-    if (result?.error) setError("Email o contraseña incorrectos.");
+    if (result?.error) setError("Email o contrasenya incorrectes.");
     else { router.push(callbackUrl); router.refresh(); }
   }
 
@@ -74,21 +104,21 @@ function LoginForm() {
             placeholder="tu@email.com" />
         </div>
         <div>
-          <label style={{ display: "block", fontSize: "0.72rem", color: "#7aadff", fontWeight: "700", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Contraseña</label>
+          <label style={{ display: "block", fontSize: "0.72rem", color: "#7aadff", fontWeight: "700", marginBottom: "6px", letterSpacing: "0.08em", textTransform: "uppercase" }}>Contrasenya</label>
           <input type="password" required style={inputStyle} value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             placeholder="••••••••" />
         </div>
         <button type="submit" disabled={loading} className="cl-btn-gold"
           style={{ width: "100%", cursor: "pointer", fontSize: "0.95rem", padding: "0.75rem", marginTop: "0.5rem", borderRadius: "10px" }}>
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? "Entrant..." : "Entrar"}
         </button>
       </form>
 
       <p style={{ textAlign: "center", fontSize: "0.85rem", color: "#3a5a88", marginTop: "1.5rem" }}>
-        ¿No tienes cuenta?{" "}
+        No tens compte?{" "}
         <Link href="/auth/register" style={{ color: "#00b4d8", fontWeight: "700", textDecoration: "none" }}>
-          Regístrate
+          Registra&apos;t
         </Link>
       </p>
     </div>
@@ -107,7 +137,7 @@ export default function LoginPage() {
         pointerEvents: "none",
       }} />
       <Suspense fallback={
-        <div style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Cargando...</div>
+        <div style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Carregant...</div>
       }>
         <LoginForm />
       </Suspense>
