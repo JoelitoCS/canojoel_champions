@@ -1,14 +1,22 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
 
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "No autoritzat" }, { status: 401 });
+  }
+
+  // Comprovar variables d'entorn de Supabase
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return NextResponse.json(
+      { error: "Supabase no configurat. Afegeix NEXT_PUBLIC_SUPABASE_URL i SUPABASE_SERVICE_ROLE_KEY a les variables d'entorn." },
+      { status: 500 }
+    );
   }
 
   try {
@@ -19,38 +27,45 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No s'ha proporcionat cap fitxer" }, { status: 400 });
     }
 
-    // Validar tipus de fitxer
+    // Validar tipus
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
     if (!validTypes.includes(file.type)) {
-      return NextResponse.json({ error: "Tipus de fitxer no vàlid. Usa JPG, PNG, WEBP o GIF." }, { status: 400 });
+      return NextResponse.json({ error: "Tipus no vàlid. Usa JPG, PNG, WEBP o GIF." }, { status: 400 });
     }
 
-    // Validar mida (màxim 5MB)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
+    // Validar mida (5MB màxim)
+    if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: "El fitxer és massa gran. Màxim 5MB." }, { status: 400 });
     }
 
-    // Crear directori si no existeix
-    const uploadDir = join(process.cwd(), "public", "uploads", "avatars");
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
+    const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+    const filename = `${session.user.id}-${Date.now()}.${ext}`;
 
-    // Generar nom únic per evitar col·lisions
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const filename = `avatar-${session.user.id}-${Date.now()}.${ext}`;
-    const filepath = join(uploadDir, filename);
-
-    // Escriure el fitxer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filepath, buffer);
+
+    // Pujar a Supabase Storage via API REST (sense SDK per no afegir dependències)
+    const uploadUrl = `${supabaseUrl}/storage/v1/object/avatars/${filename}`;
+    const uploadRes = await fetch(uploadUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${supabaseKey}`,
+        "Content-Type": file.type,
+        "x-upsert": "true",
+      },
+      body: buffer,
+    });
+
+    if (!uploadRes.ok) {
+      const err = await uploadRes.text();
+      console.error("Supabase upload error:", err);
+      return NextResponse.json({ error: "Error pujant la imatge a Supabase" }, { status: 500 });
+    }
 
     // URL pública de la imatge
-    const imageUrl = `/uploads/avatars/${filename}`;
+    const imageUrl = `${supabaseUrl}/storage/v1/object/public/avatars/${filename}`;
 
-    // Actualitzar la imatge a la base de dades
+    // Guardar URL a la BD
     await prisma.user.update({
       where: { id: session.user.id },
       data: { image: imageUrl },
