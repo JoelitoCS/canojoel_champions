@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, redirect } from "next/navigation";
 import Link from "next/link";
 
 const inputStyle = {
@@ -28,22 +28,10 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ── Si ja tens sessió activa, redirigeix ──
-  useEffect(() => {
-    if (status === "authenticated") {
-      // Si l'usuari és admin i ve de /admin, envia'l allà directament
-      if (session?.user?.role === "ADMIN" && callbackUrl.startsWith("/admin")) {
-        router.replace(callbackUrl);
-      } else if (session?.user?.role === "ADMIN") {
-        router.replace("/admin");
-      } else {
-        router.replace(callbackUrl === "/auth/login" ? "/" : callbackUrl);
-      }
-    }
-  }, [status, session, router, callbackUrl]);
-
-  // Mostrar loading mentre comprovem la sessió
-  if (status === "loading" || status === "authenticated") {
+  // Si ja té sessió activa, redirigeix sense mostrar el formulari
+  if (status === "authenticated") {
+    const dest = session?.user?.role === "ADMIN" ? "/admin" : (callbackUrl === "/auth/login" ? "/" : callbackUrl);
+    router.replace(dest);
     return (
       <div style={{
         width: "100%", maxWidth: "420px",
@@ -51,8 +39,20 @@ function LoginForm() {
         border: "1px solid #1a3a7a55", borderRadius: "20px", padding: "2.5rem 2rem",
         backdropFilter: "blur(12px)", textAlign: "center",
       }}>
-        <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⭐</div>
         <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Redirigint...</p>
+      </div>
+    );
+  }
+
+  if (status === "loading") {
+    return (
+      <div style={{
+        width: "100%", maxWidth: "420px",
+        background: "linear-gradient(160deg, #001a4acc, #000f2acc)",
+        border: "1px solid #1a3a7a55", borderRadius: "20px", padding: "2.5rem 2rem",
+        backdropFilter: "blur(12px)", textAlign: "center",
+      }}>
+        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Carregant...</p>
       </div>
     );
   }
@@ -63,8 +63,12 @@ function LoginForm() {
     setError("");
     const result = await signIn("credentials", { ...form, redirect: false });
     setLoading(false);
-    if (result?.error) setError("Email o contrasenya incorrectes.");
-    else { router.push(callbackUrl); router.refresh(); }
+    if (result?.error) {
+      setError("Email o contrasenya incorrectes.");
+    } else {
+      router.push(callbackUrl === "/auth/login" ? "/" : callbackUrl);
+      router.refresh();
+    }
   }
 
   return (
@@ -136,9 +140,7 @@ export default function LoginPage() {
         background: "radial-gradient(ellipse 60% 50% at 50% 30%, #1565c022 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
-      <Suspense fallback={
-        <div style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Carregant...</div>
-      }>
+      <Suspense fallback={<div style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Carregant...</div>}>
         <LoginForm />
       </Suspense>
     </div>

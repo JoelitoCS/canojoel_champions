@@ -23,9 +23,16 @@ export default async function EquipsPage() {
     /* BD no configurada */
   }
 
+  // Mapa de logos actualitzats des del fitxer local (sempre prioritari sobre la BD)
+  const logoMap = new Map(CHAMPIONS_TEAMS.map((t) => [t.name, t.logo]));
+
   const teams =
     dbTeams.length > 0
-      ? dbTeams
+      ? dbTeams.map((t) => ({
+          ...t,
+          // El logo del fitxer local sempre guanya sobre el de la BD
+          logo: logoMap.get(t.name) ?? t.logo,
+        }))
       : CHAMPIONS_TEAMS.map((t, i) => ({
           id: String(i),
           ...t,
@@ -43,7 +50,6 @@ export default async function EquipsPage() {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "3rem 1.5rem" }}>
-      {/* ── Capçalera ── */}
       <div style={{ marginBottom: "3.5rem" }}>
         <p style={{
           fontSize: "0.68rem", color: "#00b4d8", fontWeight: "800",
@@ -59,13 +65,11 @@ export default async function EquipsPage() {
         </p>
       </div>
 
-      {/* ── Grups ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: "3.5rem" }}>
         {Object.keys(byGroup).sort().map((group) => {
           const glow = GROUP_GLOW[group] ?? "#1565c0";
           return (
             <div key={group}>
-              {/* Capçalera del grup */}
               <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.25rem" }}>
                 <div style={{
                   width: "40px", height: "40px", borderRadius: "50%", flexShrink: 0,
@@ -91,7 +95,6 @@ export default async function EquipsPage() {
                 }} />
               </div>
 
-              {/* Targetes */}
               <div style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
@@ -101,14 +104,8 @@ export default async function EquipsPage() {
                   <div
                     key={team.id}
                     className="cl-card cl-card-hover"
-                    style={{
-                      padding: "1.75rem 1rem 1.5rem",
-                      textAlign: "center",
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
+                    style={{ padding: "1.75rem 1rem 1.5rem", textAlign: "center", position: "relative", overflow: "hidden" }}
                   >
-                    {/* Glow de fons */}
                     <div style={{
                       position: "absolute", bottom: "-20px", left: "50%",
                       transform: "translateX(-50%)",
@@ -117,25 +114,21 @@ export default async function EquipsPage() {
                       pointerEvents: "none",
                     }} />
 
-                    {/* Anell + Escut */}
                     <div style={{
                       width: "80px", height: "80px",
                       margin: "0 auto 1rem",
                       position: "relative",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
-                      {/* Anell exterior */}
                       <div style={{
                         position: "absolute", inset: "-4px", borderRadius: "50%",
                         border: `1.5px solid ${glow}55`,
                         background: `radial-gradient(circle, ${glow}0a, transparent)`,
                       }} />
-                      {/* Anell interior */}
                       <div style={{
                         position: "absolute", inset: "0", borderRadius: "50%",
                         background: "radial-gradient(circle at 35% 30%, #ffffff08, transparent 60%)",
                       }} />
-
                       <TeamShield
                         name={team.name}
                         shortName={team.shortName}
@@ -144,20 +137,14 @@ export default async function EquipsPage() {
                       />
                     </div>
 
-                    {/* Nom */}
-                    <p style={{
-                      fontSize: "0.85rem", fontWeight: "800",
-                      color: "#d0e8ff", lineHeight: 1.3, marginBottom: "4px",
-                    }}>
+                    <p style={{ fontSize: "0.85rem", fontWeight: "800", color: "#d0e8ff", lineHeight: 1.3, marginBottom: "4px" }}>
                       {team.name}
                     </p>
                     <p style={{ fontSize: "0.65rem", color: "#3a6acc" }}>{team.country}</p>
 
-                    {/* Badge grup */}
                     <div style={{
                       display: "inline-block", marginTop: "8px",
-                      fontSize: "0.6rem", fontWeight: "900",
-                      color: "#ffffff",
+                      fontSize: "0.6rem", fontWeight: "900", color: "#ffffff",
                       background: `linear-gradient(135deg, ${glow}dd, ${glow}88)`,
                       border: `1px solid ${glow}66`,
                       padding: "2px 10px", borderRadius: "20px",
