@@ -32,7 +32,7 @@ export default function PerfilPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [userData, setUserData] = useState({ name: "", email: "", image: "" });
+  const [userData, setUserData] = useState({ id: "", name: "", email: "", image: "" });
   const [form, setForm] = useState({ name: "", email: "" });
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -101,7 +101,6 @@ export default function PerfilPage() {
     setAvatarPreview(null);
     setAvatarFile(null);
     setSuccessAvatar("✅ Foto de perfil actualitzada correctament.");
-    // Actualitzar la sessió de NextAuth per refrescar la imatge
     await update({ image: data.imageUrl });
   }
 
@@ -126,7 +125,6 @@ export default function PerfilPage() {
 
     setUserData((prev) => ({ ...prev, ...data }));
     setSuccessInfo("✅ Informació actualitzada correctament.");
-    // Refrescar la sessió
     await update({ name: data.name, email: data.email });
   }
 
@@ -134,7 +132,6 @@ export default function PerfilPage() {
 
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "3rem 1.5rem" }}>
-      {/* Capçalera */}
       <div style={{ marginBottom: "2.5rem" }}>
         <p style={{ fontSize: "0.7rem", color: "#c89b3c", fontWeight: "800", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
           Configuració
@@ -147,7 +144,7 @@ export default function PerfilPage() {
         </p>
       </div>
 
-      {/* ── Secció foto de perfil ── */}
+      {/* ── Foto de perfil ── */}
       <div style={{
         background: "linear-gradient(135deg, #001a4a88, #001028aa)",
         border: "1px solid #1a3a6a44",
@@ -160,7 +157,6 @@ export default function PerfilPage() {
         </h2>
 
         <div style={{ display: "flex", alignItems: "center", gap: "2rem", flexWrap: "wrap" }}>
-          {/* Avatar actual */}
           <div
             onClick={() => fileInputRef.current?.click()}
             style={{
@@ -169,9 +165,7 @@ export default function PerfilPage() {
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: "2.5rem", fontWeight: "900", color: "#fff",
               flexShrink: 0, cursor: "pointer", position: "relative",
-              border: "3px solid #1a4a8855",
-              overflow: "hidden",
-              transition: "all 0.2s",
+              border: "3px solid #1a4a8855", overflow: "hidden",
             }}
           >
             {currentImage ? (
@@ -179,12 +173,10 @@ export default function PerfilPage() {
             ) : (
               initials
             )}
-            {/* Overlay hover */}
             <div style={{
               position: "absolute", inset: 0, background: "#00000055",
               display: "flex", alignItems: "center", justifyContent: "center",
-              opacity: 0, transition: "opacity 0.2s",
-              fontSize: "1.5rem",
+              opacity: 0, transition: "opacity 0.2s", fontSize: "1.5rem",
             }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "0")}
@@ -198,46 +190,31 @@ export default function PerfilPage() {
               Fes clic a l&apos;avatar o al botó per seleccionar una imatge.<br />
               <span style={{ color: "#3a5a88", fontSize: "0.78rem" }}>JPG, PNG, WEBP o GIF · Màxim 5MB</span>
             </p>
-
             <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                style={{
-                  background: "linear-gradient(135deg, #001a4a, #002060)",
-                  border: "1px solid #1a4a88",
-                  color: "#7aadff", padding: "0.5rem 1.2rem",
-                  borderRadius: "8px", fontSize: "0.82rem",
-                  fontWeight: "600", cursor: "pointer",
-                }}
-              >
+              <button onClick={() => fileInputRef.current?.click()} style={{
+                background: "linear-gradient(135deg, #001a4a, #002060)",
+                border: "1px solid #1a4a88", color: "#7aadff",
+                padding: "0.5rem 1.2rem", borderRadius: "8px",
+                fontSize: "0.82rem", fontWeight: "600", cursor: "pointer",
+              }}>
                 📁 Seleccionar foto
               </button>
-
               {avatarFile && (
-                <button
-                  onClick={handleAvatarUpload}
-                  disabled={loadingAvatar}
-                  className="cl-btn-gold"
-                  style={{ padding: "0.5rem 1.2rem", borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer" }}
-                >
+                <button onClick={handleAvatarUpload} disabled={loadingAvatar} className="cl-btn-gold"
+                  style={{ padding: "0.5rem 1.2rem", borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer" }}>
                   {loadingAvatar ? "Pujant..." : "⬆️ Pujar foto"}
                 </button>
               )}
-
               {avatarFile && (
-                <button
-                  onClick={() => { setAvatarFile(null); setAvatarPreview(null); }}
-                  style={{
-                    background: "transparent", border: "1px solid #3a1a1a",
-                    color: "#aa4444", padding: "0.5rem 0.9rem",
-                    borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer",
-                  }}
-                >
+                <button onClick={() => { setAvatarFile(null); setAvatarPreview(null); }} style={{
+                  background: "transparent", border: "1px solid #3a1a1a",
+                  color: "#aa4444", padding: "0.5rem 0.9rem",
+                  borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer",
+                }}>
                   ✕ Cancel·lar
                 </button>
               )}
             </div>
-
             {avatarFile && (
               <p style={{ fontSize: "0.78rem", color: "#4a7acc", marginTop: "0.5rem" }}>
                 Fitxer seleccionat: <strong style={{ color: "#7aadff" }}>{avatarFile.name}</strong>
@@ -246,13 +223,9 @@ export default function PerfilPage() {
           </div>
         </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
+        <input ref={fileInputRef} type="file"
           accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
+          style={{ display: "none" }} onChange={handleFileChange} />
 
         {errorAvatar && (
           <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem" }}>
@@ -266,7 +239,7 @@ export default function PerfilPage() {
         )}
       </div>
 
-      {/* ── Secció informació personal ── */}
+      {/* ── Informació personal ── */}
       <div style={{
         background: "linear-gradient(135deg, #001a4a88, #001028aa)",
         border: "1px solid #1a3a6a44",
@@ -281,27 +254,16 @@ export default function PerfilPage() {
         <form onSubmit={handleInfoSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           <div>
             <label style={labelStyle}>Nom</label>
-            <input
-              type="text"
-              style={inputStyle}
-              value={form.name}
+            <input type="text" style={inputStyle} value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="El teu nom"
-              minLength={2}
-              maxLength={50}
-            />
+              placeholder="El teu nom" minLength={2} maxLength={50} />
           </div>
           <div>
             <label style={labelStyle}>Email</label>
-            <input
-              type="email"
-              style={inputStyle}
-              value={form.email}
+            <input type="email" style={inputStyle} value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="tu@email.com"
-            />
+              placeholder="tu@email.com" />
           </div>
-
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
             <div>
               {isAdmin && (
@@ -313,12 +275,8 @@ export default function PerfilPage() {
                 }}>⭐ ADMIN</span>
               )}
             </div>
-            <button
-              type="submit"
-              disabled={loadingInfo}
-              className="cl-btn-gold"
-              style={{ padding: "0.6rem 1.75rem", borderRadius: "10px", fontSize: "0.9rem", cursor: "pointer" }}
-            >
+            <button type="submit" disabled={loadingInfo} className="cl-btn-gold"
+              style={{ padding: "0.6rem 1.75rem", borderRadius: "10px", fontSize: "0.9rem", cursor: "pointer" }}>
               {loadingInfo ? "Guardant..." : "💾 Guardar canvis"}
             </button>
           </div>
@@ -347,7 +305,7 @@ export default function PerfilPage() {
           Info del compte
         </p>
         <p style={{ fontSize: "0.82rem", color: "#4a6a88" }}>
-          ID: <span style={{ color: "#3a5a78", fontFamily: "monospace", fontSize: "0.75rem" }}>{userData.id ?? session?.user?.id}</span>
+          ID: <span style={{ color: "#3a5a78", fontFamily: "monospace", fontSize: "0.75rem" }}>{userData.id || session?.user?.id}</span>
         </p>
       </div>
     </div>
