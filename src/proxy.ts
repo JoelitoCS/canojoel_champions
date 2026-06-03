@@ -6,9 +6,14 @@ const protectedRoutes = ["/admin", "/dashboard", "/perfil"];
 const adminRoutes = ["/admin"];
 
 export async function proxy(request: NextRequest) {
+  // NextAuth v5 usa un nombre de cookie diferente según el entorno
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
+    // NextAuth v5 en producción usa __Secure- prefix, en dev no
+    cookieName: process.env.NODE_ENV === "production"
+      ? "__Secure-authjs.session-token"
+      : "authjs.session-token",
   });
 
   const { pathname } = request.nextUrl;
