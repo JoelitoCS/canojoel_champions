@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { MatchStatus, MatchStage } from "@prisma/client";
 import { TeamShield } from "@/components/TeamShield";
+import Link from "next/link";
 
 const statusLabel: Record<MatchStatus, string> = {
   SCHEDULED: "Programat",
@@ -101,7 +102,8 @@ export default async function PartitsPage() {
                   const ss = statusStyle[match.status];
                   const isPlayed = match.status === "FINISHED" || match.status === "LIVE";
                   return (
-                    <div key={match.id} className="cl-card" style={{ padding: "1.25rem 1.5rem" }}>
+                    <div key={match.id} className="cl-card cl-card-hover" style={{ padding: "1.25rem 1.5rem", cursor: "pointer", transition: "all 0.15s" }}>
+                      <Link href={`/partits/${match.id}`} style={{ textDecoration: "none", display: "block" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
                           <TeamShield name={match.homeTeam.name} shortName={match.homeTeam.shortName} logo={match.homeTeam.logo} size={44} />
@@ -127,6 +129,7 @@ export default async function PartitsPage() {
                           {isPlayed && <span style={{ fontSize: "2rem", fontWeight: "900", color: "#ffffff", lineHeight: 1 }}>{match.awayScore ?? 0}</span>}
                         </div>
                       </div>
+                      </Link>
                     </div>
                   );
                 })}

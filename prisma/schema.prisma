@@ -26,6 +26,7 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  comments Comment[]
 
   @@map("users")
 }
@@ -111,8 +112,23 @@ model Match {
 
   homeTeam Team @relation("HomeTeam", fields: [homeTeamId], references: [id], onDelete: Cascade)
   awayTeam Team @relation("AwayTeam", fields: [awayTeamId], references: [id], onDelete: Cascade)
+  comments Comment[]
 
   @@map("matches")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  matchId   String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
 }
 
 enum MatchStage {
