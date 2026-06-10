@@ -29,7 +29,7 @@ export async function GET() {
 // POST /api/teams — Crea un equip (només ADMIN)
 export async function POST(request: Request) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "EDITOR")) {
     return NextResponse.json({ error: "No autoritzat" }, { status: 403 });
   }
 

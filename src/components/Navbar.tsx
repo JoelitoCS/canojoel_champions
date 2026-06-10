@@ -9,6 +9,7 @@ export function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const isAdmin = session?.user?.role === "ADMIN";
+  const isEditor = session?.user?.role === "EDITOR";
 
   const links = [
     { href: "/",              label: "Inici" },
@@ -16,6 +17,7 @@ export function Navbar() {
     { href: "/classificacio", label: "Classificació" },
     { href: "/equips",        label: "Equips" },
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
+    ...(isEditor ? [{ href: "/editor", label: "Editor" }] : []),
   ];
 
   const userImage = session?.user?.image ?? null;
@@ -116,6 +118,14 @@ export function Navbar() {
                       color: "#001030", padding: "2px 7px", borderRadius: "4px",
                       fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0,
                     }}>ADMIN</span>
+                  )}
+                  {isEditor && (
+                    <span style={{
+                      fontSize: "0.58rem",
+                      background: "linear-gradient(135deg, #006080, #00b4d8)",
+                      color: "#ffffff", padding: "2px 7px", borderRadius: "4px",
+                      fontWeight: "900", letterSpacing: "0.05em", flexShrink: 0,
+                    }}>EDITOR</span>
                   )}
                 </Link>
 

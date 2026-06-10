@@ -139,6 +139,7 @@ export default function PerfilPage() {
   }
 
   const isAdmin = session?.user?.role === "ADMIN";
+  const isEditor = session?.user?.role === "EDITOR";
 
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "3rem 1.5rem" }}>
@@ -309,6 +310,14 @@ export default function PerfilPage() {
                   color: "#001030", padding: "3px 10px", borderRadius: "5px",
                   fontWeight: "900", letterSpacing: "0.05em",
                 }}>⭐ ADMIN</span>
+              )}
+              {isEditor && (
+                <span style={{
+                  fontSize: "0.65rem",
+                  background: "linear-gradient(135deg, #006080, #00b4d8)",
+                  color: "#ffffff", padding: "3px 10px", borderRadius: "5px",
+                  fontWeight: "900", letterSpacing: "0.05em",
+                }}>✏️ EDITOR</span>
               )}
             </div>
             <button

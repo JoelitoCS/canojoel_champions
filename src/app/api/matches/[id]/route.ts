@@ -17,7 +17,7 @@ const matchSchema = z.object({
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN")
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "EDITOR"))
     return NextResponse.json({ error: "No autoritzat" }, { status: 403 });
 
   const { id } = await params;
@@ -50,7 +50,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN")
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "EDITOR"))
     return NextResponse.json({ error: "No autoritzat" }, { status: 403 });
 
   const { id } = await params;

@@ -19,7 +19,7 @@ async function main() {
   await prisma.user.deleteMany();
   console.log("🗑️  Totes les taules buidades\n");
 
-  // ── 2. Creem l'admin ─────────────────────────────────────────────
+  // ── 2. Creem l'admin i l'editor ──────────────────────────────────
   const hashedPassword = await bcrypt.hash("admin123", 12);
   await prisma.user.create({
     data: {
@@ -31,6 +31,18 @@ async function main() {
     },
   });
   console.log("👤 Admin creat: admin@admin.com / admin123\n");
+
+  const hashedEditorPassword = await bcrypt.hash("editor123", 12);
+  await prisma.user.create({
+    data: {
+      id: generateId(),
+      name: "Editor",
+      email: "editor@editor.com",
+      password: hashedEditorPassword,
+      role: "EDITOR",
+    },
+  });
+  console.log("✏️  Editor creat: editor@editor.com / editor123\n");
 
   // ── 3. Inserim els 32 equips ─────────────────────────────────────
   console.log("⚽ Inserint equips...\n");

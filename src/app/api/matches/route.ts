@@ -36,10 +36,10 @@ export async function GET() {
   }
 }
 
-// POST /api/matches — Crea un partit (només ADMIN)
+// POST /api/matches — Crea un partit (ADMIN o EDITOR)
 export async function POST(request: Request) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session || (session.user.role !== "ADMIN" && session.user.role !== "EDITOR")) {
     return NextResponse.json({ error: "No autoritzat" }, { status: 403 });
   }
 

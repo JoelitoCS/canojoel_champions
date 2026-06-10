@@ -3,41 +3,39 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function AdminPage() {
+export default async function EditorPage() {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") redirect("/no-autoritzat");
+  if (!session || (session.user.role !== "EDITOR" && session.user.role !== "ADMIN")) {
+    redirect("/no-autoritzat");
+  }
 
-  let teamsCount = 0, matchesCount = 0, usersCount = 0;
+  let teamsCount = 0, matchesCount = 0;
   try {
-    [teamsCount, matchesCount, usersCount] = await Promise.all([
+    [teamsCount, matchesCount] = await Promise.all([
       prisma.team.count(),
       prisma.match.count(),
-      prisma.user.count(),
     ]);
   } catch { /* BD no configurada */ }
-
-  const statCards = [
-    { label: "Equips", value: teamsCount, icon: "🛡️", href: "/admin/equips", color: "#003a8c" },
-    { label: "Partits", value: matchesCount, icon: "⚽", href: "/admin/partits", color: "#003a1a" },
-    { label: "Usuaris", value: usersCount, icon: "👥", href: "/admin/usuaris", color: "#2a003a" },
-  ];
 
   return (
     <div style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 1.5rem" }}>
       {/* Capçalera */}
       <div style={{ marginBottom: "3rem" }}>
-        <p style={{ fontSize: "0.7rem", color: "#c89b3c", fontWeight: "800", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
-          Panel d&apos;Administració
+        <p style={{ fontSize: "0.7rem", color: "#00b4d8", fontWeight: "800", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
+          Panel d&apos;Editor
         </p>
         <h1 style={{ fontSize: "2rem", fontWeight: "900", color: "#e0eaff", marginBottom: "0.25rem" }}>
-          ⚙ Benvingut, {session.user.name ?? "Admin"}
+          ✏️ Benvingut, {session.user.name ?? "Editor"}
         </h1>
-        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Gestiona la plataforma Champions League</p>
+        <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Gestiona equips i partits de la Champions League</p>
       </div>
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "3rem" }}>
-        {statCards.map((s) => (
+        {[
+          { label: "Equips", value: teamsCount, icon: "🛡️", href: "/editor/equips", color: "#003a8c" },
+          { label: "Partits", value: matchesCount, icon: "⚽", href: "/editor/partits", color: "#003a1a" },
+        ].map((s) => (
           <Link
             key={s.label}
             href={s.href}
@@ -46,7 +44,6 @@ export default async function AdminPage() {
               background: `linear-gradient(135deg, ${s.color}cc, #001030cc)`,
               border: "1px solid #1a3a6a44",
               borderRadius: "14px", padding: "1.5rem",
-              transition: "all 0.2s",
             }}
             className="cl-card-hover"
           >
@@ -63,9 +60,8 @@ export default async function AdminPage() {
       </h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>
         {[
-          { href: "/admin/equips", icon: "🛡️", title: "Gestionar Equips", desc: "Afegir, editar i eliminar equips participants" },
-          { href: "/admin/partits", icon: "⚽", title: "Gestionar Partits", desc: "Crear partits i introduir resultats" },
-          { href: "/admin/usuaris", icon: "👥", title: "Gestionar Usuaris", desc: "Canviar rols i eliminar comptes d'usuaris" },
+          { href: "/editor/equips", icon: "🛡️", title: "Gestionar Equips", desc: "Afegir, editar i eliminar equips participants" },
+          { href: "/editor/partits", icon: "⚽", title: "Gestionar Partits", desc: "Crear partits i introduir resultats" },
           { href: "/equips", icon: "👁️", title: "Vista pública equips", desc: "Com veu l'usuari la pàgina d'equips" },
           { href: "/classificacio", icon: "🏆", title: "Vista pública classificació", desc: "Verificar la taula de classificació" },
         ].map((item) => (
@@ -77,7 +73,7 @@ export default async function AdminPage() {
               background: "linear-gradient(135deg, #001a4a88, #001028aa)",
               border: "1px solid #1a3a6a44",
               borderRadius: "12px", padding: "1.25rem",
-              textDecoration: "none", transition: "all 0.2s",
+              textDecoration: "none",
             }}
             className="cl-card-hover"
           >
