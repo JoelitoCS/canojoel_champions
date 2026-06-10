@@ -26,6 +26,7 @@ Plataforma SaaS multi-usuari per seguir la **UEFA Champions League**: equips, pa
 ### Usuaris autenticats (`USER`)
 - Registre i inici de sessió amb credencials.
 - Perfil editable: nom, email i foto d'avatar (pujada a Supabase Storage).
+- **Comentaris** en partits: escriure i eliminar els propis comentaris.
 
 ### Rol `EDITOR`
 - CRUD complet d'**equips** (crear, editar, eliminar).
@@ -98,6 +99,9 @@ enum MatchStatus  { SCHEDULED · LIVE · FINISHED · CANCELLED }
 | POST | `/api/matches` | EDITOR+ | Crea partit |
 | PUT | `/api/matches/[id]` | EDITOR+ | Actualitza partit |
 | DELETE | `/api/matches/[id]` | EDITOR+ | Elimina partit |
+| GET | `/api/matches/[id]/comments` | Públic | Llista comentaris del partit |
+| POST | `/api/matches/[id]/comments` | Autenticat | Afegeix comentari |
+| DELETE | `/api/matches/[id]/comments` | Owner o ADMIN | Elimina comentari |
 | POST | `/api/register` | Públic | Registra usuari (rol USER) |
 | GET | `/api/profile` | Autenticat | Obté dades pròpies |
 | PATCH | `/api/profile` | Autenticat | Actualitza nom/email |
@@ -207,6 +211,7 @@ Obrir [http://localhost:3000](http://localhost:3000)
 
 - [x] Visitant pot consultar equips i partits amb dades reals de la BD.
 - [x] Usuari pot registrar-se i iniciar sessió.
+- [x] Usuari autenticat pot comentar en partits i eliminar els seus comentaris.
 - [x] Rol `EDITOR` pot fer CRUD d'equips i partits.
 - [x] Rol `ADMIN` pot fer CRUD d'equips, partits i gestionar usuaris (canvi de rol, eliminació).
 - [x] Perfil editable amb foto d'avatar pujada a Supabase Storage.
