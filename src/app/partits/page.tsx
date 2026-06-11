@@ -3,6 +3,8 @@ import { MatchStatus, MatchStage } from "@prisma/client";
 import { TeamShield } from "@/components/TeamShield";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const statusLabel: Record<MatchStatus, string> = {
   SCHEDULED: "Programat",
   LIVE: "En Joc",

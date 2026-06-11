@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { MatchStage, MatchStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const matchSchema = z.object({
@@ -41,6 +42,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         awayTeam: { select: { id: true, name: true, shortName: true, logo: true } },
       },
     });
+    revalidatePath("/partits");
+    revalidatePath("/classificacio");
     return NextResponse.json(match);
   } catch (e) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.errors }, { status: 400 });
