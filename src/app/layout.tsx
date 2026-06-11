@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { SessionProviderWrapper } from "@/components/SessionProviderWrapper";
+import { Star } from "lucide-react";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -31,8 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             borderTop: "1px solid rgba(30,58,138,0.4)",
             background: "#000f2a",
           }}>
-            <span style={{ color: "#4a7acc", fontSize: "0.78rem" }}>
-              ⭐ UEFA Champions League SaaS — Joel Cano · {new Date().getFullYear()}
+            <span style={{ color: "#4a7acc", fontSize: "0.78rem", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <Star size={12} style={{ color: "#c89b3c", fill: "#c89b3c" }} />
+              UEFA Champions League SaaS — Joel Cano · {new Date().getFullYear()}
             </span>
           </footer>
         </SessionProviderWrapper>

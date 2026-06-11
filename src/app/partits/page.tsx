@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { MatchStatus, MatchStage } from "@prisma/client";
 import { TeamShield } from "@/components/TeamShield";
 import Link from "next/link";
+import { Swords, Inbox } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -72,9 +73,12 @@ export default async function PartitsPage() {
         <p style={{ fontSize: "0.68rem", color: "#00b4d8", fontWeight: "800", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
           UEFA Champions League
         </p>
-        <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", marginBottom: "0.4rem" }}>
-          ⚽ Partits
-        </h1>
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "0.4rem" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "linear-gradient(135deg, #1565c022, #00b4d811)", border: "1px solid #1565c033", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Swords size={20} style={{ color: "#00b4d8" }} />
+        </div>
+        <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", margin: 0 }}>Partits</h1>
+      </div>
         <p style={{ color: "#3a6acc", fontSize: "0.9rem" }}>{matches.length} partits registrats</p>
       </div>
 
@@ -84,7 +88,7 @@ export default async function PartitsPage() {
           background: "linear-gradient(135deg, #0d1a5a44, #08102844)",
           border: "1px dashed #1a3a6a", borderRadius: "16px",
         }}>
-          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📭</div>
+          <Inbox size={48} style={{ color: "#1a3a6a", margin: "0 auto 1rem" }} />
           <p style={{ color: "#4a7acc" }}>Encara no hi ha partits registrats.</p>
         </div>
       ) : (

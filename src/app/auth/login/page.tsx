@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { LogIn, CheckCircle, AlertTriangle, Star } from "lucide-react";
 
 const inputStyle = {
   width: "100%",
@@ -57,20 +58,22 @@ function LoginForm() {
           width: "56px", height: "56px", margin: "0 auto 1rem",
           background: "linear-gradient(135deg, #1565c0, #00b4d8)",
           borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "1.8rem", boxShadow: "0 0 20px #1565c055",
-        }}>⭐</div>
+          boxShadow: "0 0 20px #1565c055",
+        }}>
+          <Star size={24} style={{ color: "#fff", fill: "#fff" }} />
+        </div>
         <h1 style={{ fontSize: "1.5rem", fontWeight: "900", color: "#e0eaff", margin: 0 }}>Benvingut</h1>
         <p style={{ fontSize: "0.85rem", color: "#4a7acc", marginTop: "4px" }}>Accedeix al teu compte Champions</p>
       </div>
 
       {registered && (
-        <div style={{ background: "#003a1a44", border: "1px solid #00aa4444", color: "#4dcc88", borderRadius: "10px", padding: "0.75rem 1rem", marginBottom: "1.25rem", fontSize: "0.85rem" }}>
-          ✅ Compte creat correctament. Ara pots entrar.
+        <div style={{ background: "#003a1a44", border: "1px solid #00aa4444", color: "#4dcc88", borderRadius: "10px", padding: "0.75rem 1rem", marginBottom: "1.25rem", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "8px" }}>
+          <CheckCircle size={16} style={{ flexShrink: 0 }} /> Compte creat correctament. Ara pots entrar.
         </div>
       )}
       {error && (
-        <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.75rem 1rem", marginBottom: "1.25rem", fontSize: "0.85rem" }}>
-          ⚠️ {error}
+        <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.75rem 1rem", marginBottom: "1.25rem", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "8px" }}>
+          <AlertTriangle size={16} style={{ flexShrink: 0 }} /> {error}
         </div>
       )}
 
@@ -97,9 +100,10 @@ function LoginForm() {
         </div>
         <button
           type="submit" disabled={loading} className="cl-btn-gold"
-          style={{ width: "100%", cursor: "pointer", fontSize: "0.95rem", padding: "0.75rem", marginTop: "0.5rem", borderRadius: "10px" }}
+          style={{ width: "100%", cursor: "pointer", fontSize: "0.95rem", padding: "0.75rem", marginTop: "0.5rem", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
         >
-          {loading ? "Entrant..." : "Entrar"}
+          <LogIn size={17} />
+          {loading ? "Entrant..." : "Iniciar sessió"}
         </button>
       </form>
 

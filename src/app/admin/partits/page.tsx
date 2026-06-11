@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { Swords, Inbox, Pencil, Trash2 } from "lucide-react";
 
 interface Team { id: string; name: string; shortName: string; logo: string | null; }
 interface Match {
@@ -120,7 +121,10 @@ export default function AdminPartitsPage() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" }}>
         <div>
           <p style={{ fontSize: "0.7rem", color: "#c89b3c", fontWeight: "800", letterSpacing: "0.2em", textTransform: "uppercase" }}>Admin</p>
-          <h1 style={{ fontSize: "1.75rem", fontWeight: "900", color: "#e0eaff" }}>⚽ Gestió de Partits</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Swords size={22} style={{ color: "#00b4d8" }} />
+            <h1 style={{ fontSize: "1.75rem", fontWeight: "900", color: "#e0eaff", margin: 0 }}>Gestió de Partits</h1>
+          </div>
         </div>
         {!showForm && (
           <button onClick={() => { setShowForm(true); setEditId(null); setForm(EMPTY_FORM); }} className="cl-btn-gold" style={{ fontSize: "0.875rem", cursor: "pointer" }}>
@@ -131,8 +135,8 @@ export default function AdminPartitsPage() {
 
       {showForm && (
         <div className="cl-card" style={{ padding: "2rem", marginBottom: "2rem" }}>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: "800", color: "#e0eaff", marginBottom: "1.5rem" }}>
-            {editId ? "✏️ Editar Partit" : "➕ Nou Partit"}
+          <h2 style={{ fontSize: "1.1rem", fontWeight: "800", color: "#e0eaff", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
+            {editId ? <><Pencil size={17} /> Editar Partit</> : <><Swords size={17} /> Nou Partit</>}
           </h2>
           {error && (
             <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "8px", padding: "0.75rem 1rem", marginBottom: "1rem", fontSize: "0.875rem" }}>
@@ -199,7 +203,7 @@ export default function AdminPartitsPage() {
         <div style={{ textAlign: "center", padding: "3rem", color: "#3a6acc" }}>Carregant partits...</div>
       ) : matches.length === 0 ? (
         <div style={{ textAlign: "center", padding: "4rem 2rem", background: "linear-gradient(135deg, #001a4a44, #00102844)", border: "1px dashed #1a3a6a", borderRadius: "14px" }}>
-          <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>📭</div>
+          <Inbox size={48} style={{ color: "#1a3a6a", margin: "0 auto 0.75rem" }} />
           <p style={{ color: "#4a7acc" }}>Encara no hi ha partits. Crea el primer!</p>
         </div>
       ) : (
@@ -238,8 +242,8 @@ export default function AdminPartitsPage() {
 
                 {/* Botons */}
                 <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0 }}>
-                  <button onClick={() => startEdit(match)} style={{ background: "#002255", border: "1px solid #1a4a88", color: "#7aadff", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "600" }}>
-                    ✏️ Editar
+                  <button onClick={() => startEdit(match)} style={{ background: "#002255", border: "1px solid #1a4a88", color: "#7aadff", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
+                    <Pencil size={12} /> Editar
                   </button>
                   {deleteConfirm === match.id ? (
                     <>
@@ -247,8 +251,8 @@ export default function AdminPartitsPage() {
                       <button onClick={() => setDeleteConfirm(null)} style={{ background: "transparent", border: "1px solid #2a4a6a", color: "#4a7acc", padding: "4px 8px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer" }}>✕</button>
                     </>
                   ) : (
-                    <button onClick={() => setDeleteConfirm(match.id)} style={{ background: "#300000", border: "1px solid #aa000044", color: "#cc5555", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "600" }}>
-                      🗑️ Eliminar
+                    <button onClick={() => setDeleteConfirm(match.id)} style={{ background: "#300000", border: "1px solid #aa000044", color: "#cc5555", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <Trash2 size={12} /> Eliminar
                     </button>
                   )}
                 </div>

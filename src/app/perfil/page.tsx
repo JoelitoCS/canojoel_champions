@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Camera, User, Upload, X, Save, AlertTriangle, CheckCircle, Star } from "lucide-react";
 
 const inputStyle = {
   width: "100%",
@@ -164,8 +165,8 @@ export default function PerfilPage() {
         padding: "2rem",
         marginBottom: "1.5rem",
       }}>
-        <h2 style={{ fontSize: "0.85rem", fontWeight: "800", color: "#7aadff", marginBottom: "1.5rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          📷 Foto de Perfil
+        <h2 style={{ fontSize: "0.85rem", fontWeight: "800", color: "#7aadff", marginBottom: "1.5rem", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "7px" }}>
+          <Camera size={15} style={{ color: "#00b4d8" }} /> Foto de Perfil
         </h2>
 
         <div style={{ display: "flex", alignItems: "center", gap: "2rem", flexWrap: "wrap" }}>
@@ -193,14 +194,14 @@ export default function PerfilPage() {
             )}
             <div
               style={{
-                position: "absolute", inset: 0, background: "#00000055",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                opacity: 0, transition: "opacity 0.2s", fontSize: "1.5rem",
+              position: "absolute", inset: 0, background: "#00000055",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              opacity: 0, transition: "opacity 0.2s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "0")}
             >
-              ✏️
+              <Camera size={22} style={{ color: "#fff" }} />
             </div>
           </div>
 
@@ -217,18 +218,19 @@ export default function PerfilPage() {
                   border: "1px solid #1a4a88", color: "#7aadff",
                   padding: "0.5rem 1.2rem", borderRadius: "8px",
                   fontSize: "0.82rem", fontWeight: "600", cursor: "pointer",
-                }}
-              >
-                📁 Seleccionar foto
+                    display: "flex", alignItems: "center", gap: "6px",
+                    }}
+                  >
+              <Upload size={14} /> Seleccionar foto
               </button>
               {avatarFile && (
                 <button
                   onClick={handleAvatarUpload}
                   disabled={loadingAvatar}
                   className="cl-btn-gold"
-                  style={{ padding: "0.5rem 1.2rem", borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer" }}
+                  style={{ padding: "0.5rem 1.2rem", borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
                 >
-                  {loadingAvatar ? "Pujant..." : "⬆️ Pujar foto"}
+                  {loadingAvatar ? "Pujant..." : <><Upload size={14} /> Pujar foto</>}
                 </button>
               )}
               {avatarFile && (
@@ -238,9 +240,10 @@ export default function PerfilPage() {
                     background: "transparent", border: "1px solid #3a1a1a",
                     color: "#aa4444", padding: "0.5rem 0.9rem",
                     borderRadius: "8px", fontSize: "0.82rem", cursor: "pointer",
-                  }}
-                >
-                  ✕ Cancel·lar
+                      display: "flex", alignItems: "center", gap: "6px",
+                      }}
+                    >
+                <X size={14} /> Cancel·lar
                 </button>
               )}
             </div>
@@ -261,13 +264,13 @@ export default function PerfilPage() {
         />
 
         {errorAvatar && (
-          <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem" }}>
-            ⚠️ {errorAvatar}
+          <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: "8px" }}>
+            <AlertTriangle size={15} style={{ flexShrink: 0 }} /> {errorAvatar}
           </div>
         )}
         {successAvatar && (
-          <div style={{ background: "#003a1a44", border: "1px solid #00aa4444", color: "#4dcc88", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem" }}>
-            {successAvatar}
+          <div style={{ background: "#003a1a44", border: "1px solid #00aa4444", color: "#4dcc88", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: "8px" }}>
+            <CheckCircle size={15} style={{ flexShrink: 0 }} /> {successAvatar.replace("✅ ", "")}
           </div>
         )}
       </div>
@@ -280,8 +283,8 @@ export default function PerfilPage() {
         padding: "2rem",
         marginBottom: "1.5rem",
       }}>
-        <h2 style={{ fontSize: "0.85rem", fontWeight: "800", color: "#7aadff", marginBottom: "1.5rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          👤 Informació Personal
+        <h2 style={{ fontSize: "0.85rem", fontWeight: "800", color: "#7aadff", marginBottom: "1.5rem", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "7px" }}>
+          <User size={15} style={{ color: "#00b4d8" }} /> Informació Personal
         </h2>
 
         <form onSubmit={handleInfoSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -304,39 +307,41 @@ export default function PerfilPage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
             <div>
               {isAdmin && (
-                <span style={{
-                  fontSize: "0.65rem",
-                  background: "linear-gradient(135deg, #c89b3c, #e8c060)",
-                  color: "#001030", padding: "3px 10px", borderRadius: "5px",
-                  fontWeight: "900", letterSpacing: "0.05em",
-                }}>⭐ ADMIN</span>
+              <span style={{
+              fontSize: "0.65rem",
+              background: "linear-gradient(135deg, #c89b3c, #e8c060)",
+              color: "#001030", padding: "3px 10px", borderRadius: "5px",
+              fontWeight: "900", letterSpacing: "0.05em",
+                display: "inline-flex", alignItems: "center", gap: "4px",
+                }}><Star size={10} style={{ fill: "#001030" }} /> ADMIN</span>
               )}
               {isEditor && (
-                <span style={{
-                  fontSize: "0.65rem",
-                  background: "linear-gradient(135deg, #006080, #00b4d8)",
-                  color: "#ffffff", padding: "3px 10px", borderRadius: "5px",
-                  fontWeight: "900", letterSpacing: "0.05em",
-                }}>✏️ EDITOR</span>
+              <span style={{
+              fontSize: "0.65rem",
+              background: "linear-gradient(135deg, #006080, #00b4d8)",
+              color: "#ffffff", padding: "3px 10px", borderRadius: "5px",
+                fontWeight: "900", letterSpacing: "0.05em",
+                }}>EDITOR</span>
               )}
             </div>
             <button
               type="submit" disabled={loadingInfo} className="cl-btn-gold"
-              style={{ padding: "0.6rem 1.75rem", borderRadius: "10px", fontSize: "0.9rem", cursor: "pointer" }}
+              style={{ padding: "0.6rem 1.75rem", borderRadius: "10px", fontSize: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", gap: "7px" }}
             >
-              {loadingInfo ? "Guardant..." : "💾 Guardar canvis"}
+              <Save size={15} />
+              {loadingInfo ? "Guardant..." : "Guardar canvis"}
             </button>
           </div>
         </form>
 
         {errorInfo && (
-          <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem" }}>
-            ⚠️ {errorInfo}
+          <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: "8px" }}>
+            <AlertTriangle size={15} style={{ flexShrink: 0 }} /> {errorInfo}
           </div>
         )}
         {successInfo && (
-          <div style={{ background: "#003a1a44", border: "1px solid #00aa4444", color: "#4dcc88", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem" }}>
-            {successInfo}
+          <div style={{ background: "#003a1a44", border: "1px solid #00aa4444", color: "#4dcc88", borderRadius: "10px", padding: "0.6rem 1rem", marginTop: "1rem", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: "8px" }}>
+            <CheckCircle size={15} style={{ flexShrink: 0 }} /> {successInfo.replace("✅ ", "")}
           </div>
         )}
       </div>

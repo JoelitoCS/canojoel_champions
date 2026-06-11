@@ -3,6 +3,13 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { TeamShield } from "@/components/TeamShield";
 import { CHAMPIONS_TEAMS } from "@/lib/teams-data";
+import { Swords, Trophy, Shield } from "lucide-react";
+
+const featureCards = [
+  { Icon: Swords, title: "Partits en Directe",  desc: "Resultats de totes les fases: grups, eliminatòries i gran final.", href: "/partits" },
+  { Icon: Trophy, title: "Classificació",        desc: "Taula automàtica amb punts, diferència de gols i classificats.",   href: "/classificacio" },
+  { Icon: Shield, title: "Equips i Escuts",      desc: "Tots els clubs amb els seus escuts, país i grup al torneig.",      href: "/equips" },
+];
 
 const FEATURED_TEAMS = CHAMPIONS_TEAMS.slice(0, 8);
 
@@ -81,11 +88,11 @@ export default async function HomePage() {
               </p>
 
               <div className="cl-hero-actions" style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                <Link href="/partits" className="cl-btn-gold" style={{ fontSize: "1rem", padding: "0.8rem 2rem", borderRadius: "10px" }}>
-                  ⚽ Veure Partits
+                <Link href="/partits" className="cl-btn-gold" style={{ fontSize: "1rem", padding: "0.8rem 2rem", borderRadius: "10px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  <Swords size={18} /> Veure Partits
                 </Link>
-                <Link href="/classificacio" className="cl-btn-outline" style={{ fontSize: "0.95rem", padding: "0.75rem 1.75rem", borderRadius: "10px" }}>
-                  🏆 Classificació
+                <Link href="/classificacio" className="cl-btn-outline" style={{ fontSize: "0.95rem", padding: "0.75rem 1.75rem", borderRadius: "10px", display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                  <Trophy size={16} /> Classificació
                 </Link>
               </div>
 
@@ -172,14 +179,12 @@ export default async function HomePage() {
             Tot el que necessites
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.25rem" }}>
-            {[
-              { icon: "⚽", title: "Partits en Directe",  desc: "Resultats de totes les fases: grups, eliminatòries i gran final.", href: "/partits" },
-              { icon: "🏆", title: "Classificació",        desc: "Taula automàtica amb punts, diferència de gols i classificats.",   href: "/classificacio" },
-              { icon: "🛡️", title: "Equips i Escuts",      desc: "Tots els clubs amb els seus escuts, país i grup al torneig.",      href: "/equips" },
-            ].map((f) => (
+            {featureCards.map((f) => (
               <Link key={f.href} href={f.href} style={{ textDecoration: "none" }}>
                 <div className="cl-card cl-card-hover" style={{ padding: "1.75rem", height: "100%" }}>
-                  <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>{f.icon}</div>
+                  <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "linear-gradient(135deg, #1565c022, #00b4d811)", border: "1px solid #1565c033", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
+                    <f.Icon size={22} style={{ color: "#00b4d8" }} />
+                  </div>
                   <h3 style={{ fontSize: "1rem", fontWeight: "800", color: "#e0eaff", marginBottom: "0.5rem" }}>{f.title}</h3>
                   <p style={{ fontSize: "0.85rem", color: "#4a7acc", lineHeight: 1.7, marginBottom: "1rem" }}>{f.desc}</p>
                   <span style={{ fontSize: "0.78rem", color: "#00b4d8", fontWeight: "700" }}>Explorar →</span>

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { CHAMPIONS_TEAMS } from "@/lib/teams-data";
+import { Trophy, BarChart2 } from "lucide-react";
 
 type TeamStats = {
   id: string;
@@ -92,16 +93,19 @@ export default async function ClassificacioPage() {
       <p style={{ fontSize: "0.68rem", color: "#00b4d8", fontWeight: "800", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
         UEFA Champions League
       </p>
-      <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", marginBottom: "0.5rem" }}>
-        🏆 Classificació
-      </h1>
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "0.5rem" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "linear-gradient(135deg, #c89b3c22, #e8c06011)", border: "1px solid #c89b3c33", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Trophy size={20} style={{ color: "#c89b3c" }} />
+        </div>
+        <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", margin: 0 }}>Classificació</h1>
+      </div>
       <p style={{ color: "#4a7acc", fontSize: "0.9rem", marginBottom: "2rem" }}>
         {standings.length} equips · Actualitzat automàticament
       </p>
 
       {standings.length === 0 ? (
         <div style={{ textAlign: "center", padding: "4rem 1.5rem", background: "linear-gradient(135deg, #0d1a5a44, #08102844)", border: "1px dashed #1a3a6a", borderRadius: "16px" }}>
-          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📊</div>
+          <BarChart2 size={48} style={{ color: "#1a3a6a", margin: "0 auto 1rem" }} />
           <p style={{ color: "#4a7acc" }}>La classificació apareixerà quan hi hagi partits finalitzats.</p>
         </div>
       ) : (

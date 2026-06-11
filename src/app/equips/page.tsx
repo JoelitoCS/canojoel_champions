@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { CHAMPIONS_TEAMS } from "@/lib/teams-data";
 import { TeamShield } from "@/components/TeamShield";
+import { Shield } from "lucide-react";
 
 const GROUP_GLOW: Record<string, string> = {
   A: "#1565c0",
@@ -57,9 +58,12 @@ export default async function EquipsPage() {
         }}>
           UEFA Champions League 2024/25
         </p>
-        <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", marginBottom: "0.4rem" }}>
-          🛡️ Equips participants
-        </h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "0.4rem" }}>
+          <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "linear-gradient(135deg, #1565c022, #00b4d811)", border: "1px solid #1565c033", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Shield size={20} style={{ color: "#00b4d8" }} />
+          </div>
+          <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", margin: 0 }}>Equips participants</h1>
+        </div>
         <p style={{ color: "#3a6acc", fontSize: "0.9rem" }}>
           {teams.length} clubs · 8 grups · Escuts oficials
         </p>

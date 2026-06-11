@@ -5,6 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Home, Swords, Trophy, Shield, Settings, PenLine, LogIn, LogOut, UserCircle } from "lucide-react";
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -29,12 +30,12 @@ export function Navbar() {
   }, [menuOpen]);
 
   const links = [
-    { href: "/",              label: "Inici",         icon: "🏠" },
-    { href: "/partits",       label: "Partits",        icon: "⚽" },
-    { href: "/classificacio", label: "Classificació",  icon: "📊" },
-    { href: "/equips",        label: "Equips",         icon: "🛡️" },
-    ...(isAdmin  ? [{ href: "/admin",  label: "Admin",  icon: "⚙️" }] : []),
-    ...(isEditor ? [{ href: "/editor", label: "Editor", icon: "✏️" }] : []),
+    { href: "/",              label: "Inici",         Icon: Home },
+    { href: "/partits",       label: "Partits",        Icon: Swords },
+    { href: "/classificacio", label: "Classificació",  Icon: Trophy },
+    { href: "/equips",        label: "Equips",         Icon: Shield },
+    ...(isAdmin  ? [{ href: "/admin",  label: "Admin",  Icon: Settings }] : []),
+    ...(isEditor ? [{ href: "/editor", label: "Editor", Icon: PenLine }] : []),
   ];
 
   const userImage = session?.user?.image ?? null;
@@ -86,7 +87,7 @@ export function Navbar() {
                     transition: "all 0.15s",
                     textDecoration: "none",
                   }}>
-                    {link.label === "Admin" ? "⚙ Admin" : link.label}
+                    {link.label}
                   </Link>
                 );
               })}
@@ -128,15 +129,17 @@ export function Navbar() {
                   </Link>
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
-                    style={{ background: "transparent", border: "1px solid #1a3a6a", color: "#6a9acc", padding: "0.35rem 0.9rem", borderRadius: "8px", fontSize: "0.8rem", fontWeight: "600", cursor: "pointer" }}
+                    style={{ background: "transparent", border: "1px solid #1a3a6a", color: "#6a9acc", padding: "0.35rem 0.9rem", borderRadius: "8px", fontSize: "0.8rem", fontWeight: "600", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}
                   >
+                    <LogOut size={13} />
                     Sortir
                   </button>
                 </>
               ) : (
                 <>
-                  <Link href="/auth/login" style={{ fontSize: "0.85rem", color: "#6a9acc", textDecoration: "none", padding: "0.35rem 0.8rem" }}>
-                    Entrar
+                  <Link href="/auth/login" style={{ fontSize: "0.85rem", color: "#6a9acc", textDecoration: "none", padding: "0.35rem 0.8rem", display: "flex", alignItems: "center", gap: "5px" }}>
+                    <LogIn size={14} />
+                    Iniciar sessió
                   </Link>
                   <Link href="/auth/register" className="cl-btn-gold" style={{ fontSize: "0.82rem", padding: "0.45rem 1.1rem", borderRadius: "8px" }}>
                     Registrar-se
@@ -248,7 +251,7 @@ export function Navbar() {
                   transition: "all 0.15s",
                 }}
               >
-                <span style={{ fontSize: "1.2rem", width: "24px", textAlign: "center" }}>{link.icon}</span>
+                <link.Icon size={18} style={{ flexShrink: 0, color: active ? "#00b4d8" : "#4a7acc" }} />
                 {link.label}
               </Link>
             );
@@ -265,19 +268,22 @@ export function Navbar() {
                 border: "1px solid #1a3a6a", color: "#6a9acc",
                 padding: "0.75rem", borderRadius: "10px",
                 fontSize: "0.9rem", fontWeight: "600", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
               }}
             >
+              <LogOut size={16} />
               Tancar sessió
             </button>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <Link href="/auth/login" onClick={() => setMenuOpen(false)} style={{
-                display: "block", textAlign: "center",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", textAlign: "center",
                 border: "1px solid #1a3a6a", color: "#6a9acc",
                 padding: "0.75rem", borderRadius: "10px",
                 fontSize: "0.9rem", fontWeight: "600", textDecoration: "none",
               }}>
-                Entrar
+                <LogIn size={16} />
+                Iniciar sessió
               </Link>
               <Link href="/auth/register" onClick={() => setMenuOpen(false)} className="cl-btn-gold" style={{
                 display: "block", textAlign: "center",

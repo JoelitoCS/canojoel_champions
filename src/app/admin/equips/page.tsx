@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { Shield, Inbox, Pencil, Trash2, Info } from "lucide-react";
 
 interface Team {
   id: string;
@@ -95,7 +96,10 @@ export default function AdminEquipsPage() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" }}>
         <div>
           <p style={{ fontSize: "0.7rem", color: "#c89b3c", fontWeight: "800", letterSpacing: "0.2em", textTransform: "uppercase" }}>Admin</p>
-          <h1 style={{ fontSize: "1.75rem", fontWeight: "900", color: "#e0eaff" }}>🛡️ Gestió d&apos;Equips</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Shield size={22} style={{ color: "#00b4d8" }} />
+            <h1 style={{ fontSize: "1.75rem", fontWeight: "900", color: "#e0eaff", margin: 0 }}>Gestió d&apos;Equips</h1>
+          </div>
         </div>
         {!showForm && (
           <button
@@ -111,12 +115,12 @@ export default function AdminEquipsPage() {
       {/* Formulari */}
       {showForm && (
         <div className="cl-card" style={{ padding: "2rem", marginBottom: "2rem" }}>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: "800", color: "#e0eaff", marginBottom: "1.5rem" }}>
-            {editId ? "✏️ Editar Equip" : "➕ Nou Equip"}
+          <h2 style={{ fontSize: "1.1rem", fontWeight: "800", color: "#e0eaff", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "8px" }}>
+            {editId ? <><Pencil size={17} /> Editar Equip</> : <><Shield size={17} /> Nou Equip</>}
           </h2>
           {!editId && (
             <div style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem", background: "#001a4a", border: "1px solid #1a6acc66", borderRadius: "8px", padding: "0.7rem 1rem", marginBottom: "1.25rem" }}>
-              <span style={{ fontSize: "1rem", color: "#4a9eff", flexShrink: 0, marginTop: "1px" }}>ℹ️</span>
+              <Info size={15} style={{ color: "#4a9eff", flexShrink: 0, marginTop: "1px" }} />
               <span style={{ fontSize: "0.8rem", color: "#7aadff", lineHeight: 1.5 }}>Todos los campos son obligatorios.</span>
             </div>
           )}
@@ -180,12 +184,8 @@ export default function AdminEquipsPage() {
       {loading ? (
         <div style={{ textAlign: "center", padding: "3rem", color: "#3a6acc" }}>Carregant equips...</div>
       ) : teams.length === 0 ? (
-        <div style={{
-          textAlign: "center", padding: "4rem 2rem",
-          background: "linear-gradient(135deg, #001a4a44, #00102844)",
-          border: "1px dashed #1a3a6a", borderRadius: "14px",
-        }}>
-          <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>🏟️</div>
+        <div style={{ textAlign: "center", padding: "4rem 2rem", background: "linear-gradient(135deg, #001a4a44, #00102844)", border: "1px dashed #1a3a6a", borderRadius: "14px" }}>
+          <Inbox size={48} style={{ color: "#1a3a6a", margin: "0 auto 0.75rem" }} />
           <p style={{ color: "#4a7acc" }}>Encara no hi ha equips. Crea el primer!</p>
         </div>
       ) : (
@@ -197,11 +197,7 @@ export default function AdminEquipsPage() {
             fontSize: "0.65rem", color: "#3a6acc", fontWeight: "700",
             letterSpacing: "0.1em", textTransform: "uppercase",
           }}>
-            <div>Logo</div>
-            <div>Nom</div>
-            <div>Codi</div>
-            <div>Grup</div>
-            <div>País</div>
+            <div>Logo</div><div>Nom</div><div>Codi</div><div>Grup</div><div>País</div>
             <div style={{ textAlign: "right" }}>Accions</div>
           </div>
 
@@ -210,72 +206,33 @@ export default function AdminEquipsPage() {
               display: "grid", gridTemplateColumns: "44px 1fr 80px 80px 100px 120px",
               gap: "0.75rem", padding: "0.85rem 1.25rem", alignItems: "center",
             }}>
-              {/* Logo */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {team.logo ? (
                   <img src={team.logo} alt={team.name} style={{ width: "32px", height: "32px", objectFit: "contain" }} />
                 ) : (
-                  <div style={{
-                    width: "32px", height: "32px", borderRadius: "50%",
-                    background: "#002255", border: "1px solid #1a4a88",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "0.55rem", fontWeight: "800", color: "#4a7acc",
-                  }}>{team.shortName.slice(0, 3)}</div>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#002255", border: "1px solid #1a4a88", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: "800", color: "#4a7acc" }}>
+                    {team.shortName.slice(0, 3)}
+                  </div>
                 )}
               </div>
-
               <span style={{ fontWeight: "700", color: "#c8daff", fontSize: "0.875rem" }}>{team.name}</span>
-
-              <span style={{
-                fontSize: "0.7rem", fontWeight: "800", color: "#7aadff",
-                background: "#001a4a", border: "1px solid #1a3a6a",
-                padding: "2px 6px", borderRadius: "4px", letterSpacing: "0.05em",
-                display: "inline-block",
-              }}>{team.shortName}</span>
-
-              <span style={{ fontSize: "0.8rem", color: team.group ? "#c89b3c" : "#2a4a6a" }}>
-                {team.group ? `Grup ${team.group}` : "—"}
-              </span>
-
+              <span style={{ fontSize: "0.7rem", fontWeight: "800", color: "#7aadff", background: "#001a4a", border: "1px solid #1a3a6a", padding: "2px 6px", borderRadius: "4px", letterSpacing: "0.05em", display: "inline-block" }}>{team.shortName}</span>
+              <span style={{ fontSize: "0.8rem", color: team.group ? "#c89b3c" : "#2a4a6a" }}>{team.group ? `Grup ${team.group}` : "—"}</span>
               <span style={{ fontSize: "0.78rem", color: "#4a6a99" }}>{team.country}</span>
 
-              {/* Accions */}
               <div style={{ display: "flex", gap: "0.4rem", justifyContent: "flex-end" }}>
-                <button
-                  onClick={() => startEdit(team)}
-                  style={{
-                    background: "#002255", border: "1px solid #1a4a88", color: "#7aadff",
-                    padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem",
-                    cursor: "pointer", fontWeight: "600", transition: "all 0.15s",
-                  }}
-                >✏️ Editar</button>
+                <button onClick={() => startEdit(team)} style={{ background: "#002255", border: "1px solid #1a4a88", color: "#7aadff", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <Pencil size={12} /> Editar
+                </button>
                 {deleteConfirm === team.id ? (
                   <>
-                    <button
-                      onClick={() => handleDelete(team.id)}
-                      style={{
-                        background: "#aa0000", border: "1px solid #cc0000", color: "#ffaaaa",
-                        padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem",
-                        cursor: "pointer", fontWeight: "700",
-                      }}
-                    >Confirmar</button>
-                    <button
-                      onClick={() => setDeleteConfirm(null)}
-                      style={{
-                        background: "transparent", border: "1px solid #2a4a6a", color: "#4a7acc",
-                        padding: "4px 8px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer",
-                      }}
-                    >✕</button>
+                    <button onClick={() => handleDelete(team.id)} style={{ background: "#aa0000", border: "1px solid #cc0000", color: "#ffaaaa", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "700" }}>Confirmar</button>
+                    <button onClick={() => setDeleteConfirm(null)} style={{ background: "transparent", border: "1px solid #2a4a6a", color: "#4a7acc", padding: "4px 8px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer" }}>✕</button>
                   </>
                 ) : (
-                  <button
-                    onClick={() => setDeleteConfirm(team.id)}
-                    style={{
-                      background: "#300000", border: "1px solid #aa000044", color: "#cc5555",
-                      padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem",
-                      cursor: "pointer", fontWeight: "600", transition: "all 0.15s",
-                    }}
-                  >🗑️ Eliminar</button>
+                  <button onClick={() => setDeleteConfirm(team.id)} style={{ background: "#300000", border: "1px solid #aa000044", color: "#cc5555", padding: "4px 10px", borderRadius: "6px", fontSize: "0.75rem", cursor: "pointer", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
+                    <Trash2 size={12} /> Eliminar
+                  </button>
                 )}
               </div>
             </div>

@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Shield, Swords, Users, Settings, Eye, Trophy } from "lucide-react";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -17,9 +18,9 @@ export default async function AdminPage() {
   } catch { /* BD no configurada */ }
 
   const statCards = [
-    { label: "Equips", value: teamsCount, icon: "🛡️", href: "/admin/equips", color: "#003a8c" },
-    { label: "Partits", value: matchesCount, icon: "⚽", href: "/admin/partits", color: "#003a1a" },
-    { label: "Usuaris", value: usersCount, icon: "👥", href: "/admin/usuaris", color: "#2a003a" },
+    { label: "Equips",  value: teamsCount,  Icon: Shield,  href: "/admin/equips",  color: "#003a8c" },
+    { label: "Partits", value: matchesCount, Icon: Swords,  href: "/admin/partits", color: "#003a1a" },
+    { label: "Usuaris", value: usersCount,   Icon: Users,   href: "/admin/usuaris", color: "#2a003a" },
   ];
 
   return (
@@ -29,9 +30,12 @@ export default async function AdminPage() {
         <p style={{ fontSize: "0.7rem", color: "#c89b3c", fontWeight: "800", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
           Panel d&apos;Administració
         </p>
-        <h1 style={{ fontSize: "2rem", fontWeight: "900", color: "#e0eaff", marginBottom: "0.25rem" }}>
-          ⚙ Benvingut, {session.user.name ?? "Admin"}
-        </h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "0.25rem" }}>
+          <Settings size={24} style={{ color: "#c89b3c" }} />
+          <h1 style={{ fontSize: "2rem", fontWeight: "900", color: "#e0eaff", margin: 0 }}>
+            Benvingut, {session.user.name ?? "Admin"}
+          </h1>
+        </div>
         <p style={{ color: "#4a7acc", fontSize: "0.9rem" }}>Gestiona la plataforma Champions League</p>
       </div>
 
@@ -50,7 +54,7 @@ export default async function AdminPage() {
             }}
             className="cl-card-hover"
           >
-            <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>{s.icon}</div>
+            <div style={{ marginBottom: "0.75rem" }}><s.Icon size={28} style={{ color: "#7aadff" }} /></div>
             <div style={{ fontSize: "2.5rem", fontWeight: "900", color: "#e8c060", lineHeight: 1 }}>{s.value}</div>
             <div style={{ fontSize: "0.8rem", color: "#6a9acc", marginTop: "4px", fontWeight: "600" }}>{s.label}</div>
           </Link>
@@ -63,11 +67,11 @@ export default async function AdminPage() {
       </h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>
         {[
-          { href: "/admin/equips", icon: "🛡️", title: "Gestionar Equips", desc: "Afegir, editar i eliminar equips participants" },
-          { href: "/admin/partits", icon: "⚽", title: "Gestionar Partits", desc: "Crear partits i introduir resultats" },
-          { href: "/admin/usuaris", icon: "👥", title: "Gestionar Usuaris", desc: "Canviar rols i eliminar comptes d'usuaris" },
-          { href: "/equips", icon: "👁️", title: "Vista pública equips", desc: "Com veu l'usuari la pàgina d'equips" },
-          { href: "/classificacio", icon: "🏆", title: "Vista pública classificació", desc: "Verificar la taula de classificació" },
+          { href: "/admin/equips",    Icon: Shield,  title: "Gestionar Equips",            desc: "Afegir, editar i eliminar equips participants" },
+          { href: "/admin/partits",   Icon: Swords,  title: "Gestionar Partits",            desc: "Crear partits i introduir resultats" },
+          { href: "/admin/usuaris",   Icon: Users,   title: "Gestionar Usuaris",            desc: "Canviar rols i eliminar comptes d'usuaris" },
+          { href: "/equips",          Icon: Eye,     title: "Vista pública equips",          desc: "Com veu l'usuari la pàgina d'equips" },
+          { href: "/classificacio",   Icon: Trophy,  title: "Vista pública classificació",   desc: "Verificar la taula de classificació" },
         ].map((item) => (
           <Link
             key={item.href}
@@ -81,7 +85,9 @@ export default async function AdminPage() {
             }}
             className="cl-card-hover"
           >
-            <span style={{ fontSize: "1.8rem", flexShrink: 0 }}>{item.icon}</span>
+            <div style={{ width: "36px", height: "36px", borderRadius: "8px", background: "linear-gradient(135deg, #1565c022, #00b4d811)", border: "1px solid #1565c033", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <item.Icon size={18} style={{ color: "#00b4d8" }} />
+            </div>
             <div>
               <p style={{ fontSize: "0.9rem", fontWeight: "700", color: "#c8daff", marginBottom: "4px" }}>{item.title}</p>
               <p style={{ fontSize: "0.78rem", color: "#3a6acc", lineHeight: 1.5 }}>{item.desc}</p>
