@@ -88,88 +88,95 @@ export default async function ClassificacioPage() {
   const standings = await getStandings();
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 1.5rem" }}>
+    <div className="cl-page-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 1.5rem" }}>
       <p style={{ fontSize: "0.68rem", color: "#00b4d8", fontWeight: "800", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
         UEFA Champions League
       </p>
-      <h1 style={{ fontSize: "2.2rem", fontWeight: "900", color: "#e0eaff", marginBottom: "0.5rem" }}>🏆 Classificació</h1>
-      <p style={{ color: "#4a7acc", fontSize: "0.9rem", marginBottom: "2.5rem" }}>
+      <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", marginBottom: "0.5rem" }}>
+        🏆 Classificació
+      </h1>
+      <p style={{ color: "#4a7acc", fontSize: "0.9rem", marginBottom: "2rem" }}>
         {standings.length} equips · Actualitzat automàticament
       </p>
 
       {standings.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "5rem 2rem", background: "linear-gradient(135deg, #0d1a5a44, #08102844)", border: "1px dashed #1a3a6a", borderRadius: "16px" }}>
+        <div style={{ textAlign: "center", padding: "4rem 1.5rem", background: "linear-gradient(135deg, #0d1a5a44, #08102844)", border: "1px dashed #1a3a6a", borderRadius: "16px" }}>
           <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📊</div>
           <p style={{ color: "#4a7acc" }}>La classificació apareixerà quan hi hagi partits finalitzats.</p>
         </div>
       ) : (
         <div className="cl-card" style={{ overflow: "hidden" }}>
-          <table className="standings-table" style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: "left", width: "40px" }}>#</th>
-                <th style={{ textAlign: "left" }}>Equip</th>
-                <th>PJ</th>
-                <th>G</th>
-                <th>E</th>
-                <th>P</th>
-                <th>GF</th>
-                <th>GC</th>
-                <th>DG</th>
-                <th style={{ color: "#e8c060" }}>Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings.map((team, idx) => (
-                <tr key={team.id} className={idx < 8 ? "qualify-zone" : ""}>
-                  <td>
-                    <span style={{
-                      display: "inline-flex", alignItems: "center", justifyContent: "center",
-                      width: "24px", height: "24px", borderRadius: "6px",
-                      background: idx < 8 ? "linear-gradient(135deg, #1565c0, #00b4d8)" : "transparent",
-                      fontSize: "0.75rem", fontWeight: "700",
-                      color: idx < 8 ? "#ffffff" : "#4a6a99",
-                    }}>{idx + 1}</span>
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      {team.logo ? (
-                        <img src={team.logo} alt={team.name} style={{ width: "26px", height: "26px", objectFit: "contain" }} />
-                      ) : (
-                        <div style={{ width: "26px", height: "26px", borderRadius: "50%", background: "#0d1a5a", border: "1px solid #1a4a88", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", fontWeight: "800", color: "#4a7acc" }}>
-                          {team.shortName.slice(0, 2)}
-                        </div>
-                      )}
-                      <span style={{ fontWeight: "700", color: "#c8daff", fontSize: "0.875rem" }}>{team.name}</span>
-                      {team.group && (
-                        <span style={{ fontSize: "0.6rem", background: "#0d1a5a", color: "#3a6acc", border: "1px solid #1a3a6a", padding: "1px 5px", borderRadius: "4px", fontWeight: "600" }}>
-                          G{team.group}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.875rem" }}>{team.played}</td>
-                  <td style={{ textAlign: "center", color: "#4daa66", fontWeight: "700", fontSize: "0.875rem" }}>{team.won}</td>
-                  <td style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.875rem" }}>{team.drawn}</td>
-                  <td style={{ textAlign: "center", color: "#cc5555", fontSize: "0.875rem" }}>{team.lost}</td>
-                  <td style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.875rem" }}>{team.goalsFor}</td>
-                  <td style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.875rem" }}>{team.goalsAgainst}</td>
-                  <td style={{ textAlign: "center", color: team.goalDifference >= 0 ? "#4daa66" : "#cc5555", fontWeight: "700", fontSize: "0.875rem" }}>
-                    {team.goalDifference > 0 ? "+" : ""}{team.goalDifference}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    <span style={{ fontWeight: "900", fontSize: "1rem", color: idx < 8 ? "#e8c060" : "#8ab4e8" }}>
-                      {team.points}
-                    </span>
-                  </td>
+          {/* Wrapper scrollable horitzontal en mòbil */}
+          <div className="cl-table-scroll">
+            <table className="standings-table" style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left", width: "36px" }}>#</th>
+                  <th style={{ textAlign: "left" }}>Equip</th>
+                  <th>PJ</th>
+                  <th className="cl-col-hide-mobile">G</th>
+                  <th className="cl-col-hide-mobile">E</th>
+                  <th className="cl-col-hide-mobile">P</th>
+                  <th className="cl-col-hide-mobile">GF</th>
+                  <th className="cl-col-hide-mobile">GC</th>
+                  <th>DG</th>
+                  <th style={{ color: "#e8c060" }}>Pts</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div style={{ padding: "0.75rem 1.5rem", borderTop: "1px solid #1a3a6a22" }}>
+              </thead>
+              <tbody>
+                {standings.map((team, idx) => (
+                  <tr key={team.id} className={idx < 8 ? "qualify-zone" : ""}>
+                    <td>
+                      <span style={{
+                        display: "inline-flex", alignItems: "center", justifyContent: "center",
+                        width: "22px", height: "22px", borderRadius: "5px",
+                        background: idx < 8 ? "linear-gradient(135deg, #1565c0, #00b4d8)" : "transparent",
+                        fontSize: "0.72rem", fontWeight: "700",
+                        color: idx < 8 ? "#ffffff" : "#4a6a99",
+                      }}>{idx + 1}</span>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        {team.logo ? (
+                          <img src={team.logo} alt={team.name} style={{ width: "24px", height: "24px", objectFit: "contain", flexShrink: 0 }} />
+                        ) : (
+                          <div style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#0d1a5a", border: "1px solid #1a4a88", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", fontWeight: "800", color: "#4a7acc", flexShrink: 0 }}>
+                            {team.shortName.slice(0, 2)}
+                          </div>
+                        )}
+                        <span style={{ fontWeight: "700", color: "#c8daff", fontSize: "0.82rem", whiteSpace: "nowrap" }}>
+                          {team.shortName}
+                        </span>
+                        {team.group && (
+                          <span style={{ fontSize: "0.58rem", background: "#0d1a5a", color: "#3a6acc", border: "1px solid #1a3a6a", padding: "1px 4px", borderRadius: "4px", fontWeight: "600" }}>
+                            G{team.group}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.82rem" }}>{team.played}</td>
+                    <td className="cl-col-hide-mobile" style={{ textAlign: "center", color: "#4daa66", fontWeight: "700", fontSize: "0.82rem" }}>{team.won}</td>
+                    <td className="cl-col-hide-mobile" style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.82rem" }}>{team.drawn}</td>
+                    <td className="cl-col-hide-mobile" style={{ textAlign: "center", color: "#cc5555", fontSize: "0.82rem" }}>{team.lost}</td>
+                    <td className="cl-col-hide-mobile" style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.82rem" }}>{team.goalsFor}</td>
+                    <td className="cl-col-hide-mobile" style={{ textAlign: "center", color: "#6a9acc", fontSize: "0.82rem" }}>{team.goalsAgainst}</td>
+                    <td style={{ textAlign: "center", color: team.goalDifference >= 0 ? "#4daa66" : "#cc5555", fontWeight: "700", fontSize: "0.82rem" }}>
+                      {team.goalDifference > 0 ? "+" : ""}{team.goalDifference}
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      <span style={{ fontWeight: "900", fontSize: "0.95rem", color: idx < 8 ? "#e8c060" : "#8ab4e8" }}>
+                        {team.points}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ padding: "0.75rem 1.25rem", borderTop: "1px solid #1a3a6a22" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div style={{ width: "3px", height: "16px", background: "linear-gradient(135deg, #1565c0, #00b4d8)", borderRadius: "2px" }} />
-              <span style={{ fontSize: "0.72rem", color: "#4a7acc" }}>Classificats per vuitens de final</span>
+              <div style={{ width: "3px", height: "14px", background: "linear-gradient(135deg, #1565c0, #00b4d8)", borderRadius: "2px" }} />
+              <span style={{ fontSize: "0.7rem", color: "#4a7acc" }}>Classificats per vuitens de final</span>
             </div>
           </div>
         </div>

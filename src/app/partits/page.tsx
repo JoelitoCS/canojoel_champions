@@ -65,12 +65,12 @@ export default async function PartitsPage() {
   );
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 1.5rem" }}>
-      <div style={{ marginBottom: "3rem" }}>
+    <div className="cl-page-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 1.5rem" }}>
+      <div style={{ marginBottom: "2.5rem" }}>
         <p style={{ fontSize: "0.68rem", color: "#00b4d8", fontWeight: "800", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
           UEFA Champions League
         </p>
-        <h1 style={{ fontSize: "2.2rem", fontWeight: "900", color: "#e0eaff", marginBottom: "0.4rem" }}>
+        <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.2rem)", fontWeight: "900", color: "#e0eaff", marginBottom: "0.4rem" }}>
           ⚽ Partits
         </h1>
         <p style={{ color: "#3a6acc", fontSize: "0.9rem" }}>{matches.length} partits registrats</p>
@@ -78,7 +78,7 @@ export default async function PartitsPage() {
 
       {matches.length === 0 ? (
         <div style={{
-          textAlign: "center", padding: "5rem 2rem",
+          textAlign: "center", padding: "4rem 1.5rem",
           background: "linear-gradient(135deg, #0d1a5a44, #08102844)",
           border: "1px dashed #1a3a6a", borderRadius: "16px",
         }}>
@@ -89,6 +89,7 @@ export default async function PartitsPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
           {sortedStages.map((stage) => (
             <div key={stage}>
+              {/* Separador de fase */}
               <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
                 <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, #1565c044, transparent)" }} />
                 <span style={{ fontSize: "0.65rem", fontWeight: "800", letterSpacing: "0.15em", color: "#00b4d8", textTransform: "uppercase", whiteSpace: "nowrap" }}>
@@ -102,33 +103,60 @@ export default async function PartitsPage() {
                   const ss = statusStyle[match.status];
                   const isPlayed = match.status === "FINISHED" || match.status === "LIVE";
                   return (
-                    <div key={match.id} className="cl-card cl-card-hover" style={{ padding: "1.25rem 1.5rem", cursor: "pointer", transition: "all 0.15s" }}>
+                    <div key={match.id} className="cl-card cl-card-hover" style={{ padding: "1.25rem 1.25rem", cursor: "pointer" }}>
                       <Link href={`/partits/${match.id}`} style={{ textDecoration: "none", display: "block" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
-                          <TeamShield name={match.homeTeam.name} shortName={match.homeTeam.shortName} logo={match.homeTeam.logo} size={44} />
-                          <span style={{ fontSize: "0.875rem", fontWeight: "800", color: "#c8daff", textAlign: "right" }}>{match.homeTeam.name}</span>
-                          {isPlayed && <span style={{ fontSize: "2rem", fontWeight: "900", color: "#ffffff", lineHeight: 1 }}>{match.homeScore ?? 0}</span>}
+
+                        {/* Layout del partit — responsive via CSS */}
+                        <div className="cl-match-row" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+
+                          {/* Equip local */}
+                          <div className="cl-match-team cl-match-team--home" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "5px" }}>
+                            <TeamShield name={match.homeTeam.name} shortName={match.homeTeam.shortName} logo={match.homeTeam.logo} size={40} />
+                            <span style={{ fontSize: "0.82rem", fontWeight: "800", color: "#c8daff", textAlign: "right" }}>
+                              {match.homeTeam.shortName}
+                            </span>
+                            {isPlayed && (
+                              <span style={{ fontSize: "1.8rem", fontWeight: "900", color: "#ffffff", lineHeight: 1 }}>
+                                {match.homeScore ?? 0}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Centre: badge + data */}
+                          <div className="cl-match-center" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px", minWidth: "80px" }}>
+                            {!isPlayed && (
+                              <span style={{ fontSize: "1.1rem", fontWeight: "900", color: "#1565c0" }}>VS</span>
+                            )}
+                            {isPlayed && (
+                              <span style={{ fontSize: "0.9rem", fontWeight: "900", color: "#4a6a99" }}>—</span>
+                            )}
+                            <span style={{ fontSize: "0.6rem", fontWeight: "800", padding: "2px 8px", borderRadius: "20px", letterSpacing: "0.06em", textTransform: "uppercase", color: ss.color, background: ss.bg, border: `1px solid ${ss.border}`, whiteSpace: "nowrap" }}>
+                              {match.status === "LIVE" && "● "}{statusLabel[match.status]}
+                            </span>
+                            <span style={{ fontSize: "0.65rem", color: "#2a5a99", textAlign: "center" }}>
+                              {new Date(match.matchDate).toLocaleDateString("ca-ES", { day: "2-digit", month: "short", year: "numeric" })}
+                            </span>
+                            {match.venue && (
+                              <span style={{ fontSize: "0.6rem", color: "#1a4a7a", textAlign: "center" }}>
+                                📍 {match.venue}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Equip visitant */}
+                          <div className="cl-match-team" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "5px" }}>
+                            <TeamShield name={match.awayTeam.name} shortName={match.awayTeam.shortName} logo={match.awayTeam.logo} size={40} />
+                            <span style={{ fontSize: "0.82rem", fontWeight: "800", color: "#c8daff" }}>
+                              {match.awayTeam.shortName}
+                            </span>
+                            {isPlayed && (
+                              <span style={{ fontSize: "1.8rem", fontWeight: "900", color: "#ffffff", lineHeight: 1 }}>
+                                {match.awayScore ?? 0}
+                              </span>
+                            )}
+                          </div>
                         </div>
 
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "5px", minWidth: "90px" }}>
-                          {!isPlayed && <span style={{ fontSize: "1.3rem", fontWeight: "900", color: "#1565c0" }}>VS</span>}
-                          {isPlayed && <span style={{ fontSize: "1.1rem", fontWeight: "900", color: "#4a6a99" }}>—</span>}
-                          <span style={{ fontSize: "0.6rem", fontWeight: "800", padding: "2px 8px", borderRadius: "20px", letterSpacing: "0.06em", textTransform: "uppercase", color: ss.color, background: ss.bg, border: `1px solid ${ss.border}` }}>
-                            {match.status === "LIVE" && "● "}{statusLabel[match.status]}
-                          </span>
-                          <span style={{ fontSize: "0.68rem", color: "#2a5a99" }}>
-                            {new Date(match.matchDate).toLocaleDateString("ca-ES", { day: "2-digit", month: "short", year: "numeric" })}
-                          </span>
-                          {match.venue && <span style={{ fontSize: "0.62rem", color: "#1a4a7a", textAlign: "center" }}>📍 {match.venue}</span>}
-                        </div>
-
-                        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px" }}>
-                          <TeamShield name={match.awayTeam.name} shortName={match.awayTeam.shortName} logo={match.awayTeam.logo} size={44} />
-                          <span style={{ fontSize: "0.875rem", fontWeight: "800", color: "#c8daff" }}>{match.awayTeam.name}</span>
-                          {isPlayed && <span style={{ fontSize: "2rem", fontWeight: "900", color: "#ffffff", lineHeight: 1 }}>{match.awayScore ?? 0}</span>}
-                        </div>
-                      </div>
                       </Link>
                     </div>
                   );
