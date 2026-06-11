@@ -114,6 +114,12 @@ export default function AdminEquipsPage() {
           <h2 style={{ fontSize: "1.1rem", fontWeight: "800", color: "#e0eaff", marginBottom: "1.5rem" }}>
             {editId ? "✏️ Editar Equip" : "➕ Nou Equip"}
           </h2>
+          {!editId && (
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem", background: "#001a4a", border: "1px solid #1a6acc66", borderRadius: "8px", padding: "0.7rem 1rem", marginBottom: "1.25rem" }}>
+              <span style={{ fontSize: "1rem", color: "#4a9eff", flexShrink: 0, marginTop: "1px" }}>ℹ️</span>
+              <span style={{ fontSize: "0.8rem", color: "#7aadff", lineHeight: 1.5 }}>Todos los campos son obligatorios.</span>
+            </div>
+          )}
           {error && (
             <div style={{ background: "#aa000022", border: "1px solid #cc000044", color: "#ff7777", borderRadius: "8px", padding: "0.75rem 1rem", marginBottom: "1rem", fontSize: "0.875rem" }}>
               {error}
